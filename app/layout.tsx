@@ -4,6 +4,7 @@ import "./globals.css";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import Logout from "./logout";
+import AuthProvider from "@/app/api/auth/[...nextauth]/auth-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,10 +19,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession();
+  console.log(`session: ${session}`);
 
   return (
     <html lang="en">
       <body className={inter.className}>
+
+      <AuthProvider session={session}>
         <nav className="bg-violet-500 h-12 text-white flex items-center p-4">
           {!!session && <Logout />}
           <div className="flex gap-x-4">
@@ -30,6 +34,8 @@ export default async function RootLayout({
           </div>
         </nav>
         {children}
+
+        </AuthProvider>
       </body>
     </html>
   );

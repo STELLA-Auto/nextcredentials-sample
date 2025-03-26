@@ -10,11 +10,9 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
@@ -47,23 +45,27 @@ export default function LoginForm() {
     const { email, password } = data;
 
     try {
-      const response: any = await signIn("credentials", {
+      const response: any = await signIn("auth0-credentials", {
         email,
         password,
         redirect: false,
       });
-      console.log({ response });
-      if (!response?.error) {
+
+      // Check if there is an error in response
+      if (response?.error) {
+        console.error("Error occurred during signIn:", response.error);
+        throw new Error(response.error || "Login failed");
+      }
+      else
+      {
         router.push("/");
-        router.refresh();
+        router.refresh()
       }
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
       // Process response here
       console.log("Login Successful", response);
       toast({ title: "Login Successful" });
+
     } catch (error: any) {
       console.error("Login Failed:", error);
       toast({ title: "Login Failed", description: error.message });

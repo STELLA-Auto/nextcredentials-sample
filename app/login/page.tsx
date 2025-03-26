@@ -4,7 +4,6 @@ import LoginForm from "./form";
 
 export default async function LoginPage() {
   const session = await getServerSession();
-  console.log({ session });
 
   if (session) {
     redirect("/");
